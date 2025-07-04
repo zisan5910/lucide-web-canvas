@@ -61,8 +61,12 @@ const PWAInstallPopup = () => {
 
         <div className="text-center">
           {/* App Logo */}
-          <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">PP</span>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden">
+            <img 
+              src="https://i.postimg.cc/pTH1nLQb/Picsart-25-07-04-21-11-45-514.png" 
+              alt="Print Poka Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* App Name */}
