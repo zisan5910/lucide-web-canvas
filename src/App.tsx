@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import ExitConfirmationPopup from "@/components/ExitConfirmationPopup";
+import PWAInstallPopup from "@/components/PWAInstallPopup";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -15,6 +16,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <OfflineIndicator />
+      <PWAInstallPopup />
       <ExitConfirmationPopup />
       <Toaster />
       <Sonner />

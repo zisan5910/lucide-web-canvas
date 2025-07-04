@@ -13,10 +13,17 @@ const PWAInstallPopup = () => {
   const [showInstallPopup, setShowInstallPopup] = useState(false);
 
   useEffect(() => {
+    // Check if user has already seen the install prompt
+    const hasSeenInstallPrompt = localStorage.getItem('hasSeenInstallPrompt');
+    
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallPopup(true);
+      
+      // Only show if user hasn't seen it before
+      if (!hasSeenInstallPrompt) {
+        setShowInstallPopup(true);
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -38,11 +45,15 @@ const PWAInstallPopup = () => {
       console.log('User dismissed the install prompt');
     }
     
+    // Mark that user has seen the prompt
+    localStorage.setItem('hasSeenInstallPrompt', 'true');
     setDeferredPrompt(null);
     setShowInstallPopup(false);
   };
 
   const handleCancelClick = () => {
+    // Mark that user has seen the prompt
+    localStorage.setItem('hasSeenInstallPrompt', 'true');
     setShowInstallPopup(false);
     setDeferredPrompt(null);
   };
