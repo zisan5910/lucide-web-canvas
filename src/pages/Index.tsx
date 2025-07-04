@@ -9,6 +9,7 @@ import BottomNav from "@/components/BottomNav";
 import Contact from "@/pages/Contact";
 import Search from "@/pages/Search";
 import OfflineIndicator from "@/components/OfflineIndicator";
+import CategoryDropdown from "@/components/CategoryDropdown";
 import { Product } from "@/types/Product";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useOfflineStorage } from "@/hooks/useOfflineStorage";
@@ -718,19 +719,72 @@ const mockProducts: Product[] = [
   }
 ];
 
-const categories = [
-  "All", 
-  "Electronics", 
-  "Fashion", 
-  "Home & Living", 
-  "Beauty & Personal Care", 
-  "Grocery & Food",
-  "Books & Stationery",
-  "Toys & Baby Products", 
-  "Sports & Outdoors", 
-  "Automotive", 
-  "Health & Wellness"
-];
+const categoryData = {
+  Electronics: [
+    "Mobile Phones",
+    "Laptops & Computers", 
+    "Cameras",
+    "Accessories (Chargers, Earphones, etc.)"
+  ],
+  Fashion: [
+    "Men's Clothing",
+    "Women's Clothing",
+    "Kid's Clothing", 
+    "Footwear",
+    "Watches, Bags, Jewelry"
+  ],
+  "Home & Living": [
+    "Furniture",
+    "Kitchen & Dining",
+    "Home Decor",
+    "Bedding",
+    "Cleaning Supplies"
+  ],
+  "Beauty & Personal Care": [
+    "Skincare",
+    "Makeup", 
+    "Hair Care",
+    "Fragrances",
+    "Men's Grooming"
+  ],
+  "Grocery & Food": [
+    "Fruits & Vegetables",
+    "Beverages",
+    "Snacks",
+    "Rice, Oils, Spices",
+    "Frozen Food"
+  ],
+  "Books & Stationery": [
+    "Academic Books",
+    "Novels",
+    "Office Supplies", 
+    "Art & Craft Materials"
+  ],
+  "Toys & Baby Products": [
+    "Toys by Age",
+    "Baby Clothing",
+    "Diapers & Wipes",
+    "Baby Food"
+  ],
+  "Sports & Outdoors": [
+    "Exercise Equipment",
+    "Sportswear",
+    "Outdoor Gear",
+    "Cycling, Football, Cricket items"
+  ],
+  Automotive: [
+    "Car Accessories",
+    "Motorbike Gear",
+    "Oils & Fluids",
+    "Car Tools"
+  ],
+  "Health & Wellness": [
+    "Vitamins & Supplements",
+    "Medical Equipment",
+    "First Aid",
+    "Eye & Dental Care"
+  ]
+};
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -738,8 +792,8 @@ const Index = () => {
   const [wishlist, setWishlist] = useLocalStorage<number[]>('wishlist', []);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "search" | "contact" | "cart" | "product-detail">("home");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Use offline storage hook
@@ -807,12 +861,24 @@ const Index = () => {
     setCurrentPage("product-detail");
   };
 
+  const handleCategorySelect = (category: string, subcategory?: string) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory(subcategory || null);
+  };
+
   const filteredProducts = useMemo(() => {
     return mockProducts.filter(product => {
-      const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+      if (selectedCategory === "All") return true;
+      
+      const matchesCategory = product.category === selectedCategory;
+      
+      if (selectedSubcategory) {
+        return matchesCategory && product.subcategory === selectedSubcategory;
+      }
+      
       return matchesCategory;
     });
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedSubcategory]);
 
   const wishlistProducts = mockProducts.filter(product => wishlist.includes(product.id));
 
@@ -946,77 +1012,45 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Category Filters */}
-      <div className="px-4 py-3 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {categories.slice(0, 4).map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
-                  selectedCategory === category
-                    ? "bg-black text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-          
+      {/* Category Navigation */}
+      <div className="px-4 py-4 bg-white border-b border-gray-100">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
           <Button
             variant="ghost"
-            size="icon"
-            onClick={() => setShowFilters(!showFilters)}
-            className="ml-2 hover:bg-gray-50 h-8 w-8"
+            onClick={() => handleCategorySelect("All")}
+            className={`px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+              selectedCategory === "All"
+                ? "bg-black text-white hover:bg-gray-800"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
           >
-            <Filter className="h-4 w-4" />
+            All Products
           </Button>
+          
+          {Object.entries(categoryData).map(([category, subcategories]) => (
+            <CategoryDropdown
+              key={category}
+              category={category}
+              subcategories={subcategories}
+              onCategorySelect={handleCategorySelect}
+              isSelected={selectedCategory === category}
+            />
+          ))}
         </div>
-
-        {showFilters && (
-          <div className="bg-white rounded-lg p-3 space-y-2 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-sm">All Categories</h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowFilters(false)}
-                className="h-6 w-6"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setShowFilters(false);
-                  }}
-                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
-                    selectedCategory === category
-                      ? "bg-black text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Products Section */}
-      <section className="px-4 pb-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-light">
-            {selectedCategory === "All" ? "All Products" : selectedCategory}
-          </h2>
-          <span className="text-xs text-gray-500">{filteredProducts.length} items</span>
+      <section className="px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-lg font-medium">
+              {selectedCategory === "All" ? "All Products" : selectedCategory}
+            </h2>
+            {selectedSubcategory && (
+              <p className="text-sm text-gray-600 mt-1">{selectedSubcategory}</p>
+            )}
+          </div>
+          <span className="text-sm text-gray-500">{filteredProducts.length} items</span>
         </div>
         
         {isLoading ? (
@@ -1024,9 +1058,9 @@ const Index = () => {
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-8">
-            <h3 className="text-base font-light mb-1">No products found</h3>
-            <p className="text-gray-500 text-sm">Try selecting a different category</p>
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium mb-2">No products found</h3>
+            <p className="text-gray-500">Try selecting a different category or subcategory</p>
           </div>
         ) : (
           <ProductGrid 
