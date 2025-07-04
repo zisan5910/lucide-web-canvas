@@ -8,8 +8,10 @@ import CartPage from "@/components/CartPage";
 import BottomNav from "@/components/BottomNav";
 import Contact from "@/pages/Contact";
 import Search from "@/pages/Search";
+import OfflineIndicator from "@/components/OfflineIndicator";
 import { Product } from "@/types/Product";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useOfflineStorage } from "@/hooks/useOfflineStorage";
 import PWAInstallPopup from "@/components/PWAInstallPopup";
 
 const mockProducts: Product[] = [
@@ -30,7 +32,7 @@ const mockProducts: Product[] = [
     id: 2,
     name: "Samsung Galaxy S24 Ultra",
     price: 1099,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Premium Android phone with S Pen and AI features.",
@@ -42,7 +44,7 @@ const mockProducts: Product[] = [
     id: 3,
     name: "Google Pixel 8 Pro",
     price: 899,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Google's flagship with advanced AI photography.",
@@ -54,7 +56,7 @@ const mockProducts: Product[] = [
     id: 4,
     name: "OnePlus 12",
     price: 699,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Fast charging flagship with premium design.",
@@ -66,7 +68,7 @@ const mockProducts: Product[] = [
     id: 5,
     name: "Xiaomi 14 Ultra",
     price: 799,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Photography-focused smartphone with Leica partnership.",
@@ -78,7 +80,7 @@ const mockProducts: Product[] = [
     id: 6,
     name: "iPhone 14",
     price: 799,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Reliable iPhone with great camera and performance.",
@@ -90,7 +92,7 @@ const mockProducts: Product[] = [
     id: 7,
     name: "Samsung Galaxy A54",
     price: 449,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Mid-range phone with premium features.",
@@ -102,7 +104,7 @@ const mockProducts: Product[] = [
     id: 8,
     name: "Nothing Phone 2",
     price: 599,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Unique transparent design with Glyph interface.",
@@ -114,7 +116,7 @@ const mockProducts: Product[] = [
     id: 9,
     name: "Oppo Find X6 Pro",
     price: 849,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Premium phone with excellent camera capabilities.",
@@ -126,7 +128,7 @@ const mockProducts: Product[] = [
     id: 10,
     name: "Realme GT 5 Pro",
     price: 549,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Mobile Phones",
     description: "Gaming-focused smartphone with fast performance.",
@@ -152,7 +154,7 @@ const mockProducts: Product[] = [
     id: 12,
     name: "Dell XPS 13",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Ultra-portable laptop with premium build quality.",
@@ -164,7 +166,7 @@ const mockProducts: Product[] = [
     id: 13,
     name: "HP Spectre x360",
     price: 1199,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "2-in-1 convertible laptop with touch screen.",
@@ -176,7 +178,7 @@ const mockProducts: Product[] = [
     id: 14,
     name: "Lenovo ThinkPad X1 Carbon",
     price: 1599,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Business laptop with military-grade durability.",
@@ -188,7 +190,7 @@ const mockProducts: Product[] = [
     id: 15,
     name: "ASUS ROG Strix G15",
     price: 1399,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Gaming laptop with RTX graphics and RGB lighting.",
@@ -200,7 +202,7 @@ const mockProducts: Product[] = [
     id: 16,
     name: "Surface Laptop 5",
     price: 999,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Microsoft's premium laptop with Windows 11.",
@@ -212,7 +214,7 @@ const mockProducts: Product[] = [
     id: 17,
     name: "Acer Swift 3",
     price: 699,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Affordable laptop with good performance for everyday use.",
@@ -224,7 +226,7 @@ const mockProducts: Product[] = [
     id: 18,
     name: "MSI Creator Z16",
     price: 2199,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Content creation laptop with professional display.",
@@ -236,7 +238,7 @@ const mockProducts: Product[] = [
     id: 19,
     name: "MacBook Air M2",
     price: 1199,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Lightweight laptop perfect for students and professionals.",
@@ -248,7 +250,7 @@ const mockProducts: Product[] = [
     id: 20,
     name: "Razer Blade 15",
     price: 1899,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=600&fit=crop",
     category: "Electronics",
     subcategory: "Laptops & Computers",
     description: "Premium gaming laptop with sleek design.",
@@ -334,7 +336,7 @@ const mockProducts: Product[] = [
     id: 27,
     name: "Formal Pants",
     price: 99,
-    image: "https://images.unsplash.com/photo-1544441892-794166f1e3be?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=600&fit=crop",
     category: "Fashion",
     subcategory: "Women's Clothing",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -346,7 +348,7 @@ const mockProducts: Product[] = [
     id: 28,
     name: "Bohemian Skirt",
     price: 69,
-    image: "https://images.unsplash.com/photo-1544441892-794166f1e3be?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=600&fit=crop",
     category: "Fashion",
     subcategory: "Women's Clothing",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -358,7 +360,7 @@ const mockProducts: Product[] = [
     id: 29,
     name: "White Button Shirt",
     price: 49,
-    image: "https://images.unsplash.com/photo-1544441892-794166f1e3be?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=400&h=600&fit=crop",
     category: "Fashion",
     subcategory: "Women's Clothing",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -370,7 +372,7 @@ const mockProducts: Product[] = [
     id: 30,
     name: "Evening Gown",
     price: 399,
-    image: "https://images.unsplash.com/photo-1544441892-794166f1e3be?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=600&fit=crop",
     category: "Fashion",
     subcategory: "Women's Clothing",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -384,7 +386,7 @@ const mockProducts: Product[] = [
     id: 31,
     name: "Modern Sofa",
     price: 899,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Comfortable 3-seater sofa with modern design.",
@@ -395,7 +397,7 @@ const mockProducts: Product[] = [
     id: 32,
     name: "Dining Table Set",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "6-seater dining table with matching chairs.",
@@ -406,7 +408,7 @@ const mockProducts: Product[] = [
     id: 33,
     name: "Queen Size Bed Frame",
     price: 699,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Sturdy wooden bed frame with headboard.",
@@ -417,7 +419,7 @@ const mockProducts: Product[] = [
     id: 34,
     name: "Office Chair",
     price: 299,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Ergonomic office chair with lumbar support.",
@@ -428,7 +430,7 @@ const mockProducts: Product[] = [
     id: 35,
     name: "Bookshelf",
     price: 199,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "5-tier wooden bookshelf for storage.",
@@ -439,7 +441,7 @@ const mockProducts: Product[] = [
     id: 36,
     name: "Coffee Table",
     price: 249,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Glass top coffee table with storage.",
@@ -450,7 +452,7 @@ const mockProducts: Product[] = [
     id: 37,
     name: "Wardrobe",
     price: 799,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h+600&fit=crop",
+    image: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "3-door wardrobe with mirror and drawers.",
@@ -461,7 +463,7 @@ const mockProducts: Product[] = [
     id: 38,
     name: "TV Stand",
     price: 179,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Modern TV stand with cable management.",
@@ -472,7 +474,7 @@ const mockProducts: Product[] = [
     id: 39,
     name: "Recliner Chair",
     price: 599,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Comfortable reclining chair with footrest.",
@@ -483,7 +485,7 @@ const mockProducts: Product[] = [
     id: 40,
     name: "Study Desk",
     price: 329,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=400&h=600&fit=crop",
     category: "Home & Living",
     subcategory: "Furniture",
     description: "Compact study desk with built-in storage.",
@@ -496,7 +498,7 @@ const mockProducts: Product[] = [
     id: 41,
     name: "Vitamin C Serum",
     price: 29,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Brightening serum with 20% Vitamin C.",
@@ -507,7 +509,7 @@ const mockProducts: Product[] = [
     id: 42,
     name: "Hydrating Face Moisturizer",
     price: 24,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Daily moisturizer for all skin types.",
@@ -518,7 +520,7 @@ const mockProducts: Product[] = [
     id: 43,
     name: "Gentle Face Cleanser",
     price: 18,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Sulfate-free cleanser for sensitive skin.",
@@ -529,7 +531,7 @@ const mockProducts: Product[] = [
     id: 44,
     name: "Retinol Night Cream",
     price: 39,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Anti-aging night cream with retinol.",
@@ -540,7 +542,7 @@ const mockProducts: Product[] = [
     id: 45,
     name: "Sunscreen SPF 50",
     price: 22,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Broad spectrum sun protection.",
@@ -551,7 +553,7 @@ const mockProducts: Product[] = [
     id: 46,
     name: "Hyaluronic Acid Serum",
     price: 26,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1527576539890-dfa815648363?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Intense hydration serum.",
@@ -562,7 +564,7 @@ const mockProducts: Product[] = [
     id: 47,
     name: "Clay Face Mask",
     price: 16,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Purifying clay mask for oily skin.",
@@ -573,7 +575,7 @@ const mockProducts: Product[] = [
     id: 48,
     name: "Eye Cream",
     price: 32,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Anti-aging eye cream with peptides.",
@@ -584,7 +586,7 @@ const mockProducts: Product[] = [
     id: 49,
     name: "Facial Toner",
     price: 20,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Balancing toner with witch hazel.",
@@ -595,7 +597,7 @@ const mockProducts: Product[] = [
     id: 50,
     name: "Exfoliating Scrub",
     price: 19,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?w=400&h=600&fit=crop",
     category: "Beauty & Personal Care",
     subcategory: "Skincare",
     description: "Gentle exfoliating scrub for smooth skin.",
@@ -608,7 +610,7 @@ const mockProducts: Product[] = [
     id: 51,
     name: "The Great Gatsby",
     price: 12,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1431576901776-e539bd916ba2?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Classic American novel by F. Scott Fitzgerald.",
@@ -619,7 +621,7 @@ const mockProducts: Product[] = [
     id: 52,
     name: "1984",
     price: 14,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Dystopian novel by George Orwell.",
@@ -630,7 +632,7 @@ const mockProducts: Product[] = [
     id: 53,
     name: "To Kill a Mockingbird",
     price: 13,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Pulitzer Prize winning novel by Harper Lee.",
@@ -641,7 +643,7 @@ const mockProducts: Product[] = [
     id: 54,
     name: "Pride and Prejudice",
     price: 11,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1460574283810-2aab119d8511?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Romance novel by Jane Austen.",
@@ -652,7 +654,7 @@ const mockProducts: Product[] = [
     id: 55,
     name: "The Catcher in the Rye",
     price: 15,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Coming-of-age novel by J.D. Salinger.",
@@ -663,7 +665,7 @@ const mockProducts: Product[] = [
     id: 56,
     name: "Harry Potter Series",
     price: 89,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1439337153520-7082a56a81f4?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Complete 7-book series by J.K. Rowling.",
@@ -674,7 +676,7 @@ const mockProducts: Product[] = [
     id: 57,
     name: "The Lord of the Rings",
     price: 45,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Epic fantasy trilogy by J.R.R. Tolkien.",
@@ -685,7 +687,7 @@ const mockProducts: Product[] = [
     id: 58,
     name: "Agatha Christie Collection",
     price: 34,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Mystery novels collection.",
@@ -696,7 +698,7 @@ const mockProducts: Product[] = [
     id: 59,
     name: "The Alchemist",
     price: 16,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1494891848038-7bd202a2afeb?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Philosophical novel by Paulo Coelho.",
@@ -707,7 +709,7 @@ const mockProducts: Product[] = [
     id: 60,
     name: "Dune",
     price: 18,
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1551038247-3d9af20df552?w=400&h=600&fit=crop",
     category: "Books & Stationery",
     subcategory: "Novels",
     description: "Science fiction epic by Frank Herbert.",
@@ -739,6 +741,9 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Use offline storage hook
+  const { isOnline, addOfflineAction, cacheData, getCachedData } = useOfflineStorage();
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -772,16 +777,29 @@ const Index = () => {
     } else {
       setCartItems([...cartItems, { product, size, quantity: 1 }]);
     }
+
+    // Cache the action for offline support
+    if (!isOnline) {
+      addOfflineAction('add-to-cart', { productId: product.id, size, quantity: 1 });
+    }
+    
     setSelectedProduct(null);
     setCurrentPage("home");
   };
 
   const toggleWishlist = (productId: number) => {
-    setWishlist(prev => 
-      prev.includes(productId) 
+    setWishlist(prev => {
+      const newWishlist = prev.includes(productId) 
         ? prev.filter(id => id !== productId)
-        : [...prev, productId]
-    );
+        : [...prev, productId];
+      
+      // Cache the action for offline support
+      if (!isOnline) {
+        addOfflineAction('add-to-wishlist', { productId, action: prev.includes(productId) ? 'remove' : 'add' });
+      }
+      
+      return newWishlist;
+    });
   };
 
   const handleProductClick = (product: Product) => {
@@ -800,91 +818,108 @@ const Index = () => {
 
   if (currentPage === "product-detail" && selectedProduct) {
     return (
-      <ProductDetailPage
-        product={selectedProduct}
-        allProducts={mockProducts}
-        wishlist={wishlist}
-        onBack={() => setCurrentPage("home")}
-        onAddToCart={addToCart}
-        onToggleWishlist={toggleWishlist}
-        onProductClick={handleProductClick}
-        onHomeClick={navigationHandlers.onHomeClick}
-        onSearchClick={navigationHandlers.onSearchClick}
-        onCartClick={navigationHandlers.onCartClick}
-        onContactClick={navigationHandlers.onContactClick}
-        cartCount={cartItemsCount}
-      />
+      <div>
+        <OfflineIndicator />
+        <ProductDetailPage
+          product={selectedProduct}
+          allProducts={mockProducts}
+          wishlist={wishlist}
+          onBack={() => setCurrentPage("home")}
+          onAddToCart={addToCart}
+          onToggleWishlist={toggleWishlist}
+          onProductClick={handleProductClick}
+          onHomeClick={navigationHandlers.onHomeClick}
+          onSearchClick={navigationHandlers.onSearchClick}
+          onCartClick={navigationHandlers.onCartClick}
+          onContactClick={navigationHandlers.onContactClick}
+          cartCount={cartItemsCount}
+        />
+      </div>
     );
   }
 
   if (currentPage === "cart") {
     return (
-      <CartPage
-        items={cartItems}
-        onUpdateQuantity={(productId, size, quantity) => {
-          if (quantity === 0) {
-            setCartItems(cartItems.filter(item => !(item.product.id === productId && item.size === size)));
-          } else {
-            setCartItems(cartItems.map(item => 
-              item.product.id === productId && item.size === size
-                ? { ...item, quantity }
-                : item
-            ));
-          }
-        }}
-        onClose={() => {
-          setCurrentPage("home");
-        }}
-        onHomeClick={navigationHandlers.onHomeClick}
-        onSearchClick={navigationHandlers.onSearchClick}
-        onContactClick={navigationHandlers.onContactClick}
-        cartCount={cartItemsCount}
-      />
+      <div>
+        <OfflineIndicator />
+        <CartPage
+          items={cartItems}
+          onUpdateQuantity={(productId, size, quantity) => {
+            if (quantity === 0) {
+              setCartItems(cartItems.filter(item => !(item.product.id === productId && item.size === size)));
+            } else {
+              setCartItems(cartItems.map(item => 
+                item.product.id === productId && item.size === size
+                  ? { ...item, quantity }
+                  : item
+              ));
+            }
+          }}
+          onClose={() => {
+            setCurrentPage("home");
+          }}
+          onHomeClick={navigationHandlers.onHomeClick}
+          onSearchClick={navigationHandlers.onSearchClick}
+          onContactClick={navigationHandlers.onContactClick}
+          cartCount={cartItemsCount}
+        />
+      </div>
     );
   }
 
   if (currentPage === "contact") {
     return (
-      <Contact 
-        onBack={() => setCurrentPage("home")}
-        onHomeClick={navigationHandlers.onHomeClick}
-        onSearchClick={navigationHandlers.onSearchClick}
-        onCartClick={navigationHandlers.onCartClick}
-        cartCount={cartItemsCount}
-      />
+      <div>
+        <OfflineIndicator />
+        <Contact 
+          onBack={() => setCurrentPage("home")}
+          onHomeClick={navigationHandlers.onHomeClick}
+          onSearchClick={navigationHandlers.onSearchClick}
+          onCartClick={navigationHandlers.onCartClick}
+          cartCount={cartItemsCount}
+        />
+      </div>
     );
   }
 
   if (currentPage === "search") {
     return (
-      <Search
-        products={mockProducts}
-        wishlist={wishlist}
-        onBack={() => setCurrentPage("home")}
-        onProductClick={handleProductClick}
-        onToggleWishlist={toggleWishlist}
-        onHomeClick={navigationHandlers.onHomeClick}
-        onCartClick={navigationHandlers.onCartClick}
-        onContactClick={navigationHandlers.onContactClick}
-        cartCount={cartItemsCount}
-      />
+      <div>
+        <OfflineIndicator />
+        <Search
+          products={mockProducts}
+          wishlist={wishlist}
+          onBack={() => setCurrentPage("home")}
+          onProductClick={handleProductClick}
+          onToggleWishlist={toggleWishlist}
+          onHomeClick={navigationHandlers.onHomeClick}
+          onCartClick={navigationHandlers.onCartClick}
+          onContactClick={navigationHandlers.onContactClick}
+          cartCount={cartItemsCount}
+        />
+      </div>
     );
   }
 
   if (isWishlistOpen) {
     return (
-      <WishlistPage
-        products={wishlistProducts}
-        wishlist={wishlist}
-        onProductClick={handleProductClick}
-        onToggleWishlist={toggleWishlist}
-        onBack={() => setIsWishlistOpen(false)}
-      />
+      <div>
+        <OfflineIndicator />
+        <WishlistPage
+          products={wishlistProducts}
+          wishlist={wishlist}
+          onProductClick={handleProductClick}
+          onToggleWishlist={toggleWishlist}
+          onBack={() => setIsWishlistOpen(false)}
+        />
+      </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      <OfflineIndicator />
+      
       {/* PWA Install Popup */}
       <PWAInstallPopup />
       
