@@ -7,43 +7,24 @@ const ExitConfirmationPopup = () => {
   const [showExitPopup, setShowExitPopup] = useState(false);
 
   useEffect(() => {
-    let isRefreshing = false;
-
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Check if this is a refresh (user pressing F5 or Ctrl+R)
-      if (e.type === 'beforeunload' && (e.ctrlKey || e.metaKey)) {
-        isRefreshing = true;
-        return; // Allow refresh without popup
-      }
-      
-      // Only show popup for actual exit attempts
-      if (!isRefreshing) {
-        e.preventDefault();
-        setShowExitPopup(true);
-        return (e.returnValue = '');
-      }
+      // For actual page unload/exit attempts, prevent default and show confirmation
+      e.preventDefault();
+      setShowExitPopup(true);
+      return (e.returnValue = '');
     };
 
     const handlePopState = () => {
-      // Only show popup for back navigation, not for refreshes
-      if (!isRefreshing) {
-        setShowExitPopup(true);
-      }
-    };
-
-    // Reset refresh flag on page load
-    const handleLoad = () => {
-      isRefreshing = false;
+      // Show popup for back navigation
+      setShowExitPopup(true);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
-    window.addEventListener('load', handleLoad);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('load', handleLoad);
     };
   }, []);
 
