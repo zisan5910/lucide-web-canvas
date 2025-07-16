@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- scientific calculator v4.7.5 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+<style>
+:root {
+    --body-background: #121212;
+    --button-color: #2a2a2a;
+    --button-hover: #3d3d3d;
+    --button-active: #4a4a4a;
+    --operator-color: #ff9500;
+    --operator-hover: #ffaa33;
+    --operator-active: #ffbb55;
+    --function-color: #4a90e2;
+    --function-hover: #5ca0f0;
+    --function-active: #6db0ff;
+    --equals-color: #34c759;
+    --equals-hover: #3cd763;
+    --equals-active: #44e76c;
+    --clear-color: #ff3b30;
+    --clear-hover: #ff453a;
+    --clear-active: #ff5a4f;
+    --text-color: #ffffff;
+    --secondary-text: #aaaaaa;
+    --max-width: 35rem;
+    --border-radius: 12px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+/* ------------- fonts ---------------- */
+@font-face {
+    font-family: 'Charm';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(fonts/charm.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(fonts/pt-sans.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Tangerine';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(fonts/tangerine.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ----------- css styles ------------ */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'PT Sans', sans-serif;
+}
+
+body {
+    background: var(--body-background);
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    min-width: 300px;
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    max-width: var(--max-width);
+}
+
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(40, 40, 40, 0.9);
+}
+
+.topBar svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--secondary-text);
+    transition: fill 200ms ease;
+}
+
+.topBar svg:hover {
+    fill: var(--text-color);
+}
+
+.signature {
+    font-family: 'Tangerine', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: var(--secondary-text);
+    letter-spacing: 2px;
+    margin: 0;
+    transition: color 200ms ease;
+}
+
+.signature:hover {
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
+.calculator {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background: rgba(25, 25, 25, 0.9);
+}
+
+.input-area {
+    color: var(--text-color);
+    position: relative;
+    background: transparent;
+    padding: 15px 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#topDisplay-container {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+    direction: rtl;
+    color: var(--secondary-text);
+}
+
+#topDisplay-container::-webkit-scrollbar {
+    display: none;
+}
+
+#topDisplay {
+    position: absolute;
+    right: 0;
+    background: transparent;
+    color: var(--secondary-text);
+    font-size: 18px;
+    height: 100%;
+    margin: 0;
+    direction: initial;
+    cursor: grab;
+}
+
+#display {
+    background: transparent;
+    color: var(--text-color);
+    width: 100%;
+    text-align: right;
+    font-size: 36px;
+    border: 0;
+    outline: 0;
+    font-weight: 300;
+    padding: 5px 0;
+}
+
+#exponential-container {
+    position: absolute;
+    right: 10px;
+    margin-top: 5px;
+    color: var(--secondary-text);
+    font-size: 14px;
+    transition: color 200ms ease;
+}
+
+#exponential-container.active {
+    color: var(--text-color);
+}
+
+.button-container {
+    width: 100%;
+}
+
+.trigonometry {
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+    margin: 10px 5px;
+    display: flex;
+    align-items: center;
+}
+
+#trigonometric-mode {
+    text-transform: capitalize;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background: rgba(60, 60, 60, 0.5);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 200ms ease;
+}
+
+#trigonometric-mode:hover {
+    background: rgba(80, 80, 80, 0.5);
+}
+
+#trigono-toggle {
+    position: relative;
+    display: inline-block;
+}
+
+#trigonometric-container {
+    background: var(--button-color);
+    position: absolute;
+    top: 150%;
+    left: 0;
+    width: max-content;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10;
+    transform: translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 200ms ease;
+}
+
+#trigonometric-container.visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.trigono-operator {
+    text-align: center;
+    padding: 12px 15px;
+    transition: background 150ms ease;
+    background: var(--function-color);
+    color: white;
+}
+
+.trigono-operator:nth-child(3n+2) {
+    background: var(--function-hover);
+}
+
+.trigono-operator:hover {
+    background: var(--function-active);
+}
+
+.button-area {
+    width: 100%;
+    background: transparent;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 8px;
+    margin-top: 10px;
+}
+
+.button {
+    color: var(--text-color);
+    text-align: center;
+    font-size: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+    user-select: none;
+    padding: 18px 0;
+    border: none;
+    transition: all 150ms ease;
+    background: var(--button-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button.click-animation {
+    animation: clickAni 150ms ease-out forwards;
+}
+
+@keyframes clickAni {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.numberButton {
+    background: var(--button-color);
+}
+
+.numberButton:hover {
+    background: var(--button-hover);
+}
+
+.operationButton {
+    background: var(--operator-color);
+    color: white;
+}
+
+.operationButton:hover {
+    background: var(--operator-hover);
+}
+
+#equalBut {
+    background: var(--equals-color);
+    color: white;
+}
+
+#equalBut:hover {
+    background: var(--equals-hover);
+}
+
+#ac, #del {
+    background: var(--clear-color);
+    color: white;
+}
+
+#ac:hover, #del:hover {
+    background: var(--clear-hover);
+}
+
+#powerButton, #squareBut, #power-1,
+#sqrtBut, #cubeRootButton, #logButton, #lnButton {
+    background: var(--function-color);
+    color: white;
+}
+
+#powerButton:hover, #squareBut:hover, #power-1:hover,
+#sqrtBut:hover, #cubeRootButton:hover, #logButton:hover, #lnButton:hover {
+    background: var(--function-hover);
+}
+
+.toggle-visibility {
+    display: none;
+}
+
+.toggle-visibility.visible {
+    display: inline-flex;
+}
+
+.button-pair {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 8px;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.paired-button {
+    background: var(--button-color);
+    padding: 18px 0;
+}
+
+#powerButton,
+#squareBut,
+#power-1 {
+    font-family: 'Charm', serif;
+}
+
+sup {
+    font-size: 0.7em;
+    position: relative;
+    top: -0.4em;
+}
+
+sub {
+    position: relative;
+    top: 0.4em;
+}
+
+#visibility-toggler {
+    background: rgba(60, 60, 60, 0.5);
+    color: var(--secondary-text);
+}
+
+#visibility-toggler:hover {
+    background: rgba(80, 80, 80, 0.5);
+    color: var(--text-color);
+}
+
+@media screen and (min-width: 768px) {
+    :root {
+        font-size: 18px;
+    }
+    
+    .button {
+        padding: 20px 0;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    :root {
+        font-size: 20px;
+    }
+    
+    #display {
+        font-size: 42px;
+    }
+    
+    .button {
+        font-size: 24px;
+        padding: 22px 0;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    :root {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+        <div class="calculator">
+            <div class="input-area">
+                <div id="topDisplay-container">
+                    <div id="topDisplay"></div>
+                </div>
+                <input type="text" id="display" readonly value="0">
+                
+                <div id="exponential-container">
+                    ×10<sup id="exponential"></sup>
+            </div>
+            <div class="button-container">
+                <div class="trigonometry">
+                    <span id="trigonometric-mode"></span>
+                    <span id="trigono-toggle">
+                        <span>Trigonometry &darr;</span>
+                        <span id="trigonometric-container">
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.sin,">sin(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.cos,">cos(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.tan,">tan(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="1/trigo(Math.sin,">cosec(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="1/trigo(Math.cos,">sec(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="1/trigo(Math.tan,">cot(
+                            </span>
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.asin,">
+                                sin<sup>-1</sup>(</span>
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.acos,">
+                                cos<sup>-1</sup>(</span>
+                            <span class="operationButton trigono-operator" data-button-symbol="trigo(Math.atan,">
+                                tan<sup>-1</sup>(</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="button-area">
+                    <span class="button" id="visibility-toggler">⇄</span>
+                    <span class="button-pair">
+                        <span class="button bracketButton paired-button">(</span>
+                        <span class="button bracketButton paired-button">)</span>
+                    </span>
+                    <span class="button" id="del">DEL</span>
+                    <span class="button" id="ac">AC</span>
+                    <span class="button operationButton" data-button-symbol="Math.PI">π</span>
+                    <span id="sqrtBut" class="button toggle-visibility visible" data-button-symbol="√(">√</span>
+                    <span id="cubeRootButton" class="button toggle-visibility" data-button-symbol="³√(">³√</span>
+                    <span id="logButton" class="button operationButton" data-button-symbol="Math.log10(">log
+                        (</span>
+                    <span id="lnButton" class="button operationButton" data-button-symbol="Math.log(">ln (</span>
+                    <span class="button" id="powerButton" data-button-symbol="^(">x<sup>□</sup></span>
+                    <span class="button" id="squareBut">x<sup>2</sup></span>
+                    <span class="button" id="power-1">x<sup>-1</sup></span>
+                    <span class="button operationButton" data-button-symbol="/">÷</span>
+                    <span class="button numberButton input-button">7</span>
+                    <span class="button numberButton input-button">8</span>
+                    <span class="button numberButton input-button">9</span>
+                    <span class="button operationButton" data-button-symbol="*">×</span>
+                    <span class="button numberButton input-button">4</span>
+                    <span class="button numberButton input-button">5</span>
+                    <span class="button numberButton input-button">6</span>
+                    <span class="button operationButton" data-button-symbol="-">−</span>
+                    <span class="button numberButton input-button">1</span>
+                    <span class="button numberButton input-button">2</span>
+                    <span class="button numberButton input-button">3</span>
+                    <span class="button operationButton" data-button-symbol="+">+</span>
+                    <span class="button numberButton input-button">0</span>
+                    <span id="dot" class="button numberButton">.</span>
+                    <span class="button" id="ansButton">ANS</span>
+                    <span class="button" id="equalBut">=</span>
+                </div>
+            </div>
+        </div>
+    </div>
+   <script>
+    const screen = document.getElementById('display');
+const topScreen = document.getElementById('topDisplay');
+const numBut = document.querySelectorAll('.numberButton');
+const operationBut = document.querySelectorAll('.operationButton');
+const bracketBut = document.querySelectorAll('.bracketButton');
+const powerBut = document.getElementById('powerButton');
+const squareBut = document.querySelector('#squareBut');
+const powerMinus1Button = document.getElementById('power-1')
+const sqrtBut = document.querySelector('#sqrtBut');
+const cubeRootBut = document.getElementById('cubeRootButton');
+const percentBut = document.querySelector('#percentBut');
+const equalBut = document.querySelector('#equalBut');
+const acBut = document.querySelector('#ac');
+const delBut = document.querySelector('#del');
+const dotBut = document.getElementById('dot');
+const trigonometricMode = document.getElementById('trigonometric-mode');
+const trigonoToggle = document.getElementById('trigono-toggle');
+const exponentialNum = document.getElementById('exponential');
+const answerButton = document.getElementById('ansButton');
+
+
+document.getElementById('visibility-toggler').addEventListener('click', function () {
+    document.querySelectorAll('.toggle-visibility').forEach(element => {
+        element.classList.toggle('visible');
+    })
+})
+
+
+
+window.addEventListener('load', acFunc);
+
+let calculation = [], showOnScreen = [];
+const operators = ['+', '-', '*', '/'];
+let trigonoMode = 'deg';
+trigonometricMode.innerText = trigonoMode;
+
+
+function calculate(equationArray) {
+    return eval(equationArray.join(''))
+}
+
+function updateScreen() {
+    topScreen.innerText = showOnScreen.join('');
+}
+
+acBut.addEventListener('click', acFunc);
+
+function acFunc() {
+    calculation = [];
+    showOnScreen = [];
+    screen.value = 0;
+    updateScreen();
+    clearExponential();
+}
+delBut.addEventListener('click', () => {
+    calculation.pop();
+    showOnScreen.pop();
+    updateScreen();
+})
+
+
+trigonometricMode.addEventListener('click', trigonometricModeFunction);
+function trigonometricModeFunction() {
+    if (trigonoMode == 'rad') { trigonoMode = 'deg' }
+    else { trigonoMode = 'rad' }
+    trigonometricMode.innerText = trigonoMode;
+}
+
+trigonoToggle.addEventListener('click', () => {
+    document.getElementById('trigonometric-container').classList.toggle('visible');
+})
+
+function trigo(operator, angle) {
+    // convert degree angle to radian angle (not for inverse trigonometry)
+    if (trigonoMode == 'deg' && operator.name[0] !== 'a') {
+        angle = angle * Math.PI / 180;
+    }
+    let result;
+    if (operator.name == 'sin' && angle == (Math.PI)) {
+        result = 0;
+        return result;
+    }
+    else if (operator.name == 'cos' && (angle == (Math.PI / 2) || angle == (3 * Math.PI / 2))) {
+        result = 0;
+        return result;
+    }
+    else if (operator.name == 'tan' && angle == (Math.PI / 2)) {
+        result = 'Invalid Input';
+        return result;
+    }
+    result = operator(angle);
+
+    // convert result for degree angle (only for inverse trigonometry)
+    if (trigonoMode == 'deg' && operator.name[0] === 'a') {
+        result = result * 180 / Math.PI
+    }
+    return result;
+}
+
+
+
+numBut.forEach(element => {
+    element.addEventListener('click', numButFunction);
+})
+
+function numButFunction(event) {
+    calculation.push(event.target.innerText);
+    showOnScreen.push(event.target.innerText);
+    updateScreen();
+}
+
+
+operationBut.forEach(element => {
+    element.addEventListener('click', operationButFunction);
+})
+
+function operationButFunction(event) {
+    calculation.push(event.target.dataset.buttonSymbol);
+    showOnScreen.push(event.target.innerText);
+    updateScreen();
+
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    })
+}
+
+
+bracketBut.forEach(element => {
+    element.addEventListener('click', bracketFunc);
+});
+function bracketFunc(event) {
+    let bracketCount = 0;
+    for (let value of calculation.join('')) {
+        if (value == '(') { bracketCount++ }
+        if (value == ')') { bracketCount-- }
+    }
+
+    if (isNaN(parseFloat(showOnScreen[showOnScreen.length - 1])) == false &&
+        event.target.innerText == '(') {
+        calculation.push('*');
+    } else if (event.target.innerText == ')') {
+        if (bracketCount == 0) { return }
+    }
+
+    calculation.push(event.target.innerText);
+    showOnScreen.push(event.target.innerText);
+    updateScreen();
+
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    })
+}
+
+function autoCloseBracket() {
+    let startParenthesis = 0;
+    let endParenthesis = 0;
+    for (element of calculation) {
+        element = element.toString();
+        if (element.indexOf('(') != -1) { startParenthesis++ }
+        else if (element.indexOf(')') != -1) { endParenthesis++ }
+    }
+    for (let i = endParenthesis; i < startParenthesis; i++) {
+        calculation.push(')');
+    }
+}
+
+powerBut.addEventListener('click', event => {
+    calculation.push('power(');
+
+    showOnScreen.push(event.target.dataset.buttonSymbol);
+    updateScreen();
+});
+function powerFunction() {
+    if (calculation.includes('power(')) {
+        let powerStart, powerEnd; // keep the index of the number from where to start power function
+
+        let powerOf = []; // keep the number which have to powered
+        let power = ['(']; // keep the number of power
+
+        // if there are any end bracket before power
+        if (calculation[calculation.indexOf('power(') - 1] == ')') {
+            let bracketCount = 0;
+            for (let i = calculation.indexOf('power(') - 1; i >= 0; i--) {
+                powerStart = i; // starting index
+                if (calculation[i] === '(') { bracketCount++ }
+                if (calculation[i] === ')') { bracketCount-- }
+                powerOf.unshift(calculation[i]);
+                if (bracketCount === 0) { break } // if start brackets are equal to end brackets then break this loop
+            }
+        } // if there are no end brackets before power
+        else {
+            for (let i = calculation.indexOf('power(') - 1; i >= 0; i--) {
+                if (operators.includes(calculation[i])) { break }
+                powerStart = i; // starting index
+                powerOf.unshift(calculation[i]);
+            }
+        }
+        // get the index of last number where power function ends
+        {
+            let bracketCount = 1;
+            for (let i = calculation.indexOf('power(') + 1; i < calculation.length; i++) {
+                if (calculation[i] == '(') { bracketCount++ }
+                if (calculation[i] == ')') { bracketCount-- }
+                power.push(calculation[i]);
+                powerEnd = i; // ending index
+                if (bracketCount == 0) { break } // if start brackets are equal to end brackets break this loop
+            }
+        }
+        // calculate power
+        let powered = Math.pow(calculate(powerOf), calculate(power));
+
+        // replace power and power numbers with powered
+        calculation.splice(powerStart, powerEnd - powerStart + 1, powered);
+
+        powerFunction(); // check if there is any other power in calculation array
+    }
+}
+
+squareBut.addEventListener('click', event => {
+    calculation.push('power(', '2', ')');
+
+    showOnScreen.push('^(', '2', ')');
+    updateScreen();
+});
+
+powerMinus1Button.addEventListener('click', event => {
+    calculation.push('power(', '-1', ')');
+    showOnScreen.push('^(', '-1', ')');
+    updateScreen();
+})
+
+
+// mathematical root functions
+sqrtBut.addEventListener('click', event => {
+    rootFunc(event, 'Math.sqrt(');
+});
+
+cubeRootBut.addEventListener('click', event => {
+    rootFunc(event, 'Math.cbrt(');
+})
+
+function rootFunc(event, root) {
+    !operators.includes(calculation.slice(-1)) ?
+        calculation.push(`*${root}`)
+        : calculation.push(root);
+    showOnScreen.push(event.target.dataset.buttonSymbol);
+    updateScreen();
+
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    })
+}
+
+
+
+equalBut.addEventListener('click', equalFunc);
+
+function equalFunc() {
+    clearExponential();
+    autoCloseBracket();
+    powerFunction();
+
+    let answer;
+    try {
+        answer = calculate(calculation).toString();
+
+        // javascript floating calculation issue fix
+        if (!answer.includes('e') &&
+            answer.includes('.') &&
+            answer.slice(0, -1).split('.')[1].endsWith('000000')) {
+            answer = parseFloat(answer.slice(0, -1)).toString()
+        }
+    } catch (error) {
+        if (error instanceof SyntaxError) {
+            screen.value = 'Syntax Error!';
+            return;
+        }
+    }
+
+    calculation = [answer];
+    showOnScreen = [answer];
+
+    localStorage.setItem('ans', answer);
+
+    if (answer.indexOf('e') != -1) {
+        const newAnswer = answer.split('e');
+        exponentialNum.innerText = newAnswer[1];
+        exponentialNum.parentElement.classList.add('active');
+        answer = newAnswer[0];
+    }
+    screen.value = answer;
+
+
+
+    // clear answer when number button clicked
+    numBut.forEach(element => {
+        element.addEventListener('click', removeAns);
+    })
+}
+
+function removeAns(event) {
+    calculation = [];
+    showOnScreen = [];
+    updateScreen();
+    console.log('remove ans')
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    })
+    numButFunction(event);
+}
+
+function clearExponential() {
+    exponentialNum.innerText = '';
+    exponentialNum.parentElement.classList.remove('active');
+}
+
+
+answerButton.addEventListener('click', () => {
+    let answer = localStorage.getItem('ans');
+    calculation.push(answer);
+    showOnScreen.push('ANS');
+    updateScreen();
+})
+
+// add keyboard functionality for computers
+document.addEventListener('keydown', e => {
+    let targetElement = e.key === 'Enter' ? equalBut :
+        e.key === 'Backspace' ? acBut :
+            e.key === 'Delete' ? delBut :
+                !isNaN(e.key) ? [...numBut].find(element => element.innerText === e.key)
+                    : [...operationBut].find(element => element.dataset.buttonSymbol === e.key);
+    targetElement && e.preventDefault();
+    targetElement && targetElement.click()
+})
+
+// button click animation
+document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('click', () => {
+        button.classList.add('click-animation')
+        button.addEventListener('animationend', () => button.classList.remove('click-animation'), { once: true })
+        // button.style.backgroundColor = "#3d3d3d"
+        // button.style.transform = "scale(0.9)"
+        // setTimeout(() => {
+        //     button.style.transform = "scale(1.05)"
+        // }, 90)
+        // setTimeout(() => {
+        //     button.style.backgroundColor = "#2a2a2a"
+        //     button.style.transform = "scale(1)"
+        // }, 150)
+    })
+})
+
+// ...existing code...
+
+function rootFunc(event, root) {
+    if (calculation.length === 0 || operators.includes(calculation.slice(-1)[0])) {
+        calculation.push(root);
+    } else {
+        calculation.push('*', root);
+    }
+    showOnScreen.push(event.target.dataset.buttonSymbol);
+    updateScreen();
+
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    });
+}
+
+// ...existing code...
+   </script> 
+</body>
+
+</html>

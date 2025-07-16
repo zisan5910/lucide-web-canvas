@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            text-decoration: none;
+            color: #333;
+        }
+        .calculator {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        input {
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-arrow">← Back</a>
+    
+    <div class="calculator">
+        <h1>Age Calculator</h1>
+        <label for="birthdate">Enter your date of birth:</label>
+        <input type="date" id="birthdate" name="birthdate">
+        <button onclick="calculateAge()">Calculate Age</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateAge() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const today = new Date();
+            
+            if (isNaN(birthdate.getTime())) {
+                document.getElementById('result').innerHTML = "Please enter a valid date";
+                return;
+            }
+            
+            if (birthdate > today) {
+                document.getElementById('result').innerHTML = "Birthdate cannot be in the future";
+                return;
+            }
+            
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
+            }
+            
+            // Calculate months and days
+            let months, days;
+            if (today.getMonth() >= birthdate.getMonth()) {
+                months = today.getMonth() - birthdate.getMonth();
+            } else {
+                months = 12 + today.getMonth() - birthdate.getMonth();
+            }
+            
+            if (today.getDate() >= birthdate.getDate()) {
+                days = today.getDate() - birthdate.getDate();
+            } else {
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days = lastMonth.getDate() - birthdate.getDate() + today.getDate();
+                months--;
+                if (months < 0) {
+                    months = 11;
+                    age--;
+                }
+            }
+            
+            document.getElementById('result').innerHTML = 
+                `Your age is: ${age} years, ${months} months, and ${days} days`;
+        }
+    </script>
+</body>
+</html>

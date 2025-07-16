@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All-in-One Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #FFFFFF, #F0F0F0, #FFFFFF, #F0F0F0);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #333333;
+      transition: background 0.3s, color 0.3s;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .dark-mode {
+      background: linear-gradient(-45deg, #003366, #001933, #003366, #001933);
+      color: #FFFFFF;
+    }
+
+    /* Full-Screen Container */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 60px; /* Adjusted to start just below the menu bar */
+    }
+
+    /* Sticky Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #003366;
+      color: #FFFFFF;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Hamburger Menu */
+    .menu-content {
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      background-color: #FFFFFF;
+      border: 1px solid #DDDDDD;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none; /* Disable clicks when hidden */
+    }
+    .menu-content.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto; /* Enable clicks when visible */
+    }
+    .menu-content a {
+      display: block;
+      color: #333333;
+      text-decoration: none;
+      padding: 8px 0;
+    }
+    .dark-mode .menu-content {
+      background-color: #003366;
+      border-color: #001933;
+    }
+    .dark-mode .menu-content a {
+      color: #FFFFFF;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      margin: 20px 0;
+      width: 80%;
+      max-width: 500px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #DDDDDD;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    /* Grid Layout for Tools */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 800px;
+      margin-top: 20px;
+    }
+    .button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #F0F0F0;
+      border-radius: 15px;
+      text-decoration: none;
+      color: #333333;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+    .button i {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777777;
+    }
+    .dark-mode .footer {
+      color: #AAAAAA;
+    }
+
+    /* Dark Mode Toggle */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #003366;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dark-mode-toggle:hover {
+      background-color: #001933;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sticky Header -->
+    <div class="header">
+      <div class="menu-icon" onclick="toggleMenu()">☰</div>
+      <h1></h1>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="menu-content" id="menuContent">
+      <a href="https://ridoan-zisan.netlify.app">Developer Info</a>
+ </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search tools..." oninput="filterTools()">
+    </div>
+
+    <!-- Tool Grid -->
+    <div class="grid" id="toolGrid">
+      <a href="Calculator.html" class="button" data-name="General Calculator">
+        <i class="fas fa-calculator"></i>
+        General Calculator
+      </a>
+      <a href="Scientific Calculator.html" class="button" data-name="Scientific Calculator">
+         <i class="fas fa-flask"></i>
+        Scientific Calculator
+      </a>
+      <a href="index1.html" class="button" data-name="Unit Converter">
+        <i class="fas fa-ruler"></i>
+        Unit Converter
+      </a>
+      <a href="Base converter.html" class="button" data-name="Base Converter">
+        <i class="fas fa-superscript"></i>
+        Base Converter
+      </a>
+      <a href="age calculator.html" class="button" data-name="Age Calculator">
+        <i class="fas fa-birthday-cake"></i>
+        Age Calculator
+      </a>
+      <a href="Currency converer.html" class="button" data-name="Currency Converter">
+        <i class="fas fa-money-bill-wave"></i>
+        Currency Converter
+      </a>
+      <a href="Trig calculator.html" class="button" data-name="Trigonometric Functions">
+        <i class="fas fa-chart-line"></i>
+        Trigonometric Functions
+      </a>
+      <a href="Percentage Calculator.html" class="button" data-name="Percentage Calculator">
+        <i class="fas fa-percentage"></i>
+        Percentage Calculator
+      </a>
+      <a href="BMI Calculator.html" class="button" data-name="BMI Calculator">
+        <i class="fas fa-weight"></i>
+        BMI Calculator
+      </a>
+      <a href="Tip Calculator.html" class="button" data-name="Tip Calculator">
+        <i class="fas fa-utensils"></i>
+        Tip Calculator
+      </a>
+      <a href="Loan Calculator.html" class="button" data-name="Loan Calculator">
+        <i class="fas fa-hand-holding-usd"></i>
+        Loan Calculator
+      </a>
+      <a href="Password Generator.html" class="button" data-name="Password Generator">
+        <i class="fas fa-key"></i>
+        Password Generator
+      </a>
+      <a href="Date Difference Calculator.html" class="button" data-name="Date Difference Calculator">
+        <i class="fas fa-calendar-alt"></i>
+        Date Difference Calculator
+      </a>
+      <a href="Time Zone Converter.html" class="button" data-name="Time Zone Converter">
+        <i class="fas fa-globe"></i>
+        Time Zone Converter
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Your Premium Toolbox for Everyday Calculations
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+  </div>
+
+  <script>
+    // Toggle Menu
+    function toggleMenu() {
+      const menuContent = document.getElementById("menuContent");
+      menuContent.classList.toggle("active");
+    }
+
+    // Close Menu When Clicking Outside or Scrolling
+    document.addEventListener("click", function(event) {
+      const menuContent = document.getElementById("menuContent");
+      const menuIcon = document.querySelector(".menu-icon");
+
+      if (!menuContent.contains(event.target) && !menuIcon.contains(event.target)) {
+        menuContent.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("scroll", function() {
+      const menuContent = document.getElementById("menuContent");
+      menuContent.classList.remove("active");
+    });
+
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    // Search Functionality
+    function filterTools() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const tools = document.querySelectorAll("#toolGrid .button");
+
+      tools.forEach(tool => {
+        const toolName = tool.getAttribute("data-name").toLowerCase();
+        if (toolName.includes(searchInput)) {
+          tool.style.display = "flex";
+        } else {
+          tool.style.display = "none";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
